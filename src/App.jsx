@@ -10,7 +10,7 @@ import Cart from "./pages/Cart";
 
 
 const App = () => {
-  const user = true;
+  
   return (
     <BrowserRouter>
     
