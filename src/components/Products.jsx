@@ -12,7 +12,7 @@ const Container = styled.div`
 `
 
 const Products = ({cat, filters, sort}) => {
-    console.log({cat, filters, sort})
+    
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -20,9 +20,9 @@ const Products = ({cat, filters, sort}) => {
         const getProducts = async ()=> {
             try {
                 const res = await axios.get(
-                    cat 
-                    ? `http://localhost:5000/api/products?category=${cat}`
-                    : `http://localhost:5000/api/products`);
+                    
+                    "http://localhost:5000/api/products");
+                   
                 
                 setProducts(res.data)
             } catch(err) {
@@ -36,14 +36,14 @@ const Products = ({cat, filters, sort}) => {
     useEffect (()=>{
         cat && 
             setFilteredProducts(
-                products.filter(item=>
+                products.filter((item)=>
                     Object.entries(filters).every(([key, value])=>
                         item[key].includes(value) 
                     )
                 )
             );
 
-    }, [products, filters])
+    }, [products, cat, filters])
 
     useEffect (()=>{
         if (sort==='newest') {
@@ -58,16 +58,16 @@ const Products = ({cat, filters, sort}) => {
                 [...prev].sort((a, b)=>b.price-a.price))
         }
 
-    }, [products, sort])
+    }, [sort])
 
 
     return (
         <Container>
-            {cat ? filteredProducts.map((item)=> (
-                <Product item={item} key={item.id}/>
-            )) : products.slice(0,8).map((item)=> (
-                <Product item={item} key={item.id}/>
-            ))}
+            {cat ? 
+            filteredProducts.map((item)=> <Product item={item} key={item.id}/>
+            ) : 
+            products.slice(0, 8).map((item)=> <Product item={item} key={item.id}/>
+            )}
             
         </Container>
     )

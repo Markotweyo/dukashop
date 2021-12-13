@@ -53,8 +53,8 @@ const ProductList = () => {
     };
     
     const handleSort = (e)=> {
-        const sort= e.target.value;
-        setSort(sort)
+        const value= e.target.value;
+        setSort(value)
     };
     
     return (
@@ -69,8 +69,8 @@ const ProductList = () => {
                     <Option disabled >
                         Color
                     </Option>
-                    <Option>White</Option>
                     <Option>Black</Option>
+                    <Option>White</Option>
                     <Option>Red</Option>
                     <Option>Blue</Option>
                     <Option>Yellow</Option>
@@ -80,9 +80,9 @@ const ProductList = () => {
                     <Option disabled >
                         Size
                     </Option>
-                    <Option>XS</Option>
-                    <Option>S</Option>
                     <Option>M</Option>
+                    <Option>S</Option>
+                    <Option>XS</Option>
                     <Option>L</Option>
                     <Option>XL</Option>
                     <Option>XXL</Option>
@@ -91,9 +91,9 @@ const ProductList = () => {
                 <Filter>
                     <FilterText>Sort Products:</FilterText>
                     <Select onChange={handleSort}>
-                    <Option value='newest'>Newest</Option>
-                    <Option value='asc'>Price (asc)</Option>
-                    <Option value='desc'>price (desc)</Option>
+                        <Option value='newest'>Newest</Option>
+                        <Option value='asc'>Price (asc)</Option>
+                        <Option value='desc'>price (desc)</Option>
                     
                     </Select>
                 </Filter>
