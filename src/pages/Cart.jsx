@@ -1,13 +1,21 @@
-import React from 'react';
-import {Add, Remove} from '@material-ui/icons'
+import React, {useState, useEffect} from 'react';
+import {Add, Remove} from '@material-ui/icons';
 
-import Announcement from '../components/Announcement'
-import Navbar from '../components/Navbar'
+import Announcement from '../components/Announcement';
+import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import {mobile} from '../responsive';
 
-import styled from 'styled-components'
+import styled from 'styled-components';
 import {useSelector} from 'react-redux';
+import StripeCheckout from 'react-stripe-checkout';
+import {userRequest} from '../requestMethod';
+import { useNavigate } from 'react-router-dom';
+
+
+
+const KEY= process.env.REACT_APP_STRIPE;
+
 
 const Container= styled.div``
 const Wrapper= styled.div`
@@ -112,9 +120,6 @@ const Hr = styled.hr`
     height: 1px;
 `
 
-
-    
-
 const SummaryTitle =styled.h1`
     font-weight: 200;
 `
@@ -134,11 +139,36 @@ const Button =styled.button`
     background-color: black;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 `
 
 
 const Cart = () => {
-    const cart = useSelector(state => state.cart)
+    const cart = useSelector(state => state.cart);
+    const [stripeToken, setStripeToken] = useState(null)
+    const navigate = useNavigate();
+    
+    const onToken=(token)=>{
+        setStripeToken(token)
+    };
+    
+    useEffect(() => {
+        const makeRequest= async ()=>{
+            try {
+                const res= await userRequest.post("/checkout/payment", {
+                    tokenId: stripeToken.id,
+                    amount: cart.total*100,
+                    
+                });
+                navigate("/success", {stripeData: res.data})
+            } catch (err) {
+                console.log(err)
+            }
+            
+        }
+        stripeToken && makeRequest()
+
+    }, [stripeToken, cart.total, navigate])
     return (
         <Container>
             <Navbar/>
@@ -198,7 +228,18 @@ const Cart = () => {
                             <SummaryItemPrice> ${cart.total}</SummaryItemPrice>
                             
                         </SummaryItem>
+                        < StripeCheckout
+                            name="Duka Shop"
+                            image="https://www.vidhub.co/assets/logos/vidhub-icon-2e5c629f64ced5598a56387d4e3d0c7c.png" // the pop-in header image (default none)
+                            billingAddress
+                            shippingAddress
+                            dscription={`Your total is ${cart.total}`}
+                            amount={cart.total*100} 
+                            stripeKey={KEY} 
+                            token={onToken} // submit callback
+                        >
                         <Button>CHECKOUT NOW</Button>
+                        </StripeCheckout>
                     </Summary>
                 </Bottom>
             </Wrapper>
