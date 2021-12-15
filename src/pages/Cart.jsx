@@ -159,16 +159,24 @@ const Cart = () => {
                     tokenId: stripeToken.id,
                     amount: cart.total*100,
                     
+                    
                 });
-                navigate("/success", {stripeData: res.data})
+                navigate("/success", {
+                    stripeDate: res.data,
+                    products: cart
+                })
+                
+                
+                
+                
             } catch (err) {
                 console.log(err)
             }
             
         }
-        stripeToken && makeRequest()
+        stripeToken && makeRequest();
 
-    }, [stripeToken, cart.total, navigate])
+    }, [stripeToken, cart.total, navigate, cart])
     return (
         <Container>
             <Navbar/>
